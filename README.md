@@ -36,7 +36,7 @@ Run frequency sweeps to analyze system response, Generate and visualize Bode plo
 
 For a complete explanation of the documentation structure and navigation, refer to the README file located at:
 
-GitHub Repo/software-network-analyzer/docs/Network_Analyzer_Documents/README.md
+software-network-analyzer/docs/Network_Analyzer_Documents/README.md
 
 **License**
 
