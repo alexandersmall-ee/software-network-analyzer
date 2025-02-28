@@ -1,0 +1,19 @@
+Command Name,SCPI Command,Status,Response/Error
+Identify Device,*IDN?,Success,"TEKTRONIX,TDS 1002B,C064444,CF:91.1CT FV:v22.16"
+Horizontal Scale,HORizontal:MAIn:SCAle?,Success,5.0E-3
+Vertical Scale CH1,CH1:SCAle?,Success,1.0E0
+Vertical Scale CH2,CH2:SCAle?,Success,1.0E-1
+Timebase Mode,HORizontal:MODE?,Failed,VI_ERROR_TMO (-1073807339): Timeout expired before operation completed.
+Trigger Level,TRIGger:LEVel?,Failed,VI_ERROR_TMO (-1073807339): Timeout expired before operation completed.
+Acquisition Mode,ACQuire:MODe?,Success,SAMPLE
+Waveform Data Format,DATa:ENCdg?,Success,SRIBINARY
+Waveform Data Source,DATa:SOUrce?,Success,CH2
+Waveform Data Start,DATa:STARt?,Success,1
+Waveform Data Stop,DATa:STOP?,Success,2500
+Measure Frequency,MEASUrement:IMMed:TYPe FREQ,Failed,VI_ERROR_TMO (-1073807339): Timeout expired before operation completed.
+Measure Period,MEASUrement:IMMed:TYPe PERIOD,Failed,VI_ERROR_TMO (-1073807339): Timeout expired before operation completed.
+Measure Peak-to-Peak,MEASUrement:IMMed:TYPe PK2PK,Failed,VI_ERROR_TMO (-1073807339): Timeout expired before operation completed.
+Measure RMS,MEASUrement:IMMed:TYPe CRMS,Failed,VI_ERROR_TMO (-1073807339): Timeout expired before operation completed.
+Set Horizontal Scale,HORizontal:MAIn:SCAle 5E-3,Failed,VI_ERROR_TMO (-1073807339): Timeout expired before operation completed.
+Set CH1 Voltage Scale,CH1:SCAle 1,Failed,VI_ERROR_TMO (-1073807339): Timeout expired before operation completed.
+Set CH2 Voltage Scale,CH2:SCAle 1,Failed,VI_ERROR_TMO (-1073807339): Timeout expired before operation completed.
