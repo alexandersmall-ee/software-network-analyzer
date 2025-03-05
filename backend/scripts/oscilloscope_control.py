@@ -1,21 +1,54 @@
 import sys
 import json
+import os
 import pyvisa
+from datetime import datetime, timezone
 
-# Initialize PyVISA resource manager
+# file path for local measurement logs
+LOG_FILE = "backend/data/measurements.json"
+
+# initialize PyVISA resource manager
 rm = pyvisa.ResourceManager()
 
 try:
-    # Open communication with the oscilloscope
+    # using usb id, open communication with the oscilloscope
     oscilloscope = rm.open_resource("USB0::0x0699::0x0368::C000000::INSTR")
-    oscilloscope.timeout = 5000  # Set timeout to avoid hanging requests
+    oscilloscope.timeout = 5000  # set timeout to avoid hanging requests
 
 except Exception as e:
+    # connection error and 
     print(json.dumps({"error": "Could not connect to oscilloscope", "details": str(e)}))
     sys.exit(1)
 
+def save_measurement_log(data):
+    """Saves oscilloscope measurement data to a JSON log file."""
+    try:
+        os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
+
+        # Read existing logs if file exists
+        if os.path.exists(LOG_FILE):
+            with open(LOG_FILE, "r") as f:
+                logs = json.load(f)
+        else:
+            logs = []
+
+        # Append new measurement entry
+        logs.append(data)
+
+        # Write updated logs back to file
+        with open(LOG_FILE, "w") as f:
+            json.dump(logs, f, indent=4)
+
+    except Exception as e:
+        print(json.dumps({"error": "Failed to log measurement", "details": str(e)}))
+
 def send_test_signal(frequency, waveform):
-    """Sends a test signal command to the oscilloscope."""
+    """
+    Function that sends a test signal command to the oscilloscope.
+    - Uses SCPI commands to configure the signal generator.
+    - Accepts frequency and waveform type as parameters for flexibility.
+    - Outputs a JSON confirmation message.    
+    """
     try:
         oscilloscope.write(f"APPL:{waveform} {frequency}Hz, 3VPP")
         return {"status": "success", "message": f"Test signal {waveform} at {frequency}Hz sent."}
@@ -27,15 +60,22 @@ def get_measurements():
     try:
         amplitude = oscilloscope.query("MEASure:VPP?")
         phase = oscilloscope.query("MEASure:PHASe?")
-        return {
-            "timestamp": sys.argv[2] if len(sys.argv) > 2 else "N/A",
-            "amplitude": float(amplitude.strip()),
-            "phase": float(phase.strip())
+
+        # Create structured measurement data
+        data = {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "frequency": sys.argv[2] if len(sys.argv) > 2 else "N/A",
+            "amplitude": float(amplitude),
+            "phase": float(phase)
         }
+
+        save_measurement_log(data)  # Persist measurement
+
+        return data
     except Exception as e:
         return {"error": "Failed to retrieve measurements", "details": str(e)}
 
-# Handle command-line arguments from Node.js
+# handle command-line arguments from API
 if len(sys.argv) > 1:
     command = sys.argv[1]
 

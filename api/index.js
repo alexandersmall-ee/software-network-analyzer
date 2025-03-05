@@ -1,4 +1,50 @@
-// main server file
+
+
+
+// Main server file
+
+// Load environment variables
+require('dotenv').config();
+
+// Import dependencies
+const express = require('express');
+const cors = require('cors');
+const errorLogger = require('./middleware/errorLogger'); // Error logging middleware
+
+// Initialize Express app
+const app = express();
+
+// Define port number
+const PORT = process.env.PORT || 5005;
+
+// Enable CORS and JSON parser for requests
+app.use(cors());
+app.use(express.json());
+
+// Import and mount API routes under `/api`
+const apiRoutes = require('./routes/apiRoutes');
+app.use('/api', apiRoutes);
+
+// Root route to confirm API is running
+app.get('/', (req, res) => {
+    res.send('Network Analyzer API is running...');
+});
+
+// Error logging middleware (must be last to capture errors)
+app.use(errorLogger);
+
+// Start the server and listen for incoming requests
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+module.exports = app;
+
+
+
+
+
+/* // main server file
 
 // define configurable settings
 require('dotenv').config();
@@ -28,4 +74,4 @@ app.get('/', (req, res) => {
 // start the server and listen for incoming requests on the port
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-});
+}); */
